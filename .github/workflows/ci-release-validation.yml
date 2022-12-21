@@ -36,3 +36,54 @@ jobs:
       - name: Test loading Node binaries lib
         run: |
           node load_test.js
+  linux-napi:
+    name: Build NAPI ${{matrix.image}} - Node ${{matrix.nodejs}} - ${{matrix.cpu.platform}}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3000
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - { name: "linux_glibc", artifact: "linux-glibc" }
+          - { name: "linux_musl", artifact: "linux-musl" }
+        nodejs:
+          - 18
+        cpu:
+          - { arch: "x86_64", platform: "x86_64", artifact: "x64" }
+          - { arch: "aarch64", platform: "arm64", artifact: "arm64" }
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Linux Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./pkg/${{matrix.image.name}}
+          load: true
+          tags: build:latest
+          platforms: linux/${{matrix.cpu.arch}}
+          build-args: |
+            PLATFORM=${{matrix.cpu.platform}}
+            ARCH=${{matrix.cpu.arch}}
+            NODE_VERSION=${{matrix.nodejs}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Pull artifacts
+        run: |
+          curl -L -O ${{ github.event.issue.body }}/napi-${{matrix.image.artifact}}-x64.tar.gz
+          tar -xvzf *.tar.gz
+
+      - name: Build and Test NAPI file
+        run: |
+          docker run -i -v $PWD:/src build:latest \
+              node /src/load_test.js
+
