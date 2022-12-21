@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 30
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         arch:
           - x64
@@ -37,12 +37,12 @@ jobs:
         run: |
           node load_test.js
   linux-napi:
-    name: Build NAPI ${{matrix.image}} - Node ${{matrix.nodejs}} - ${{matrix.cpu.platform}}
+    name: Validate NAPI ${{matrix.image.artifact}} - Node ${{matrix.nodejs}} - ${{matrix.cpu.platform}}
     runs-on: ubuntu-22.04
-    timeout-minutes: 3000
+    timeout-minutes: 30
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         image:
           - { name: "linux_glibc", artifact: "linux-glibc" }
@@ -79,11 +79,40 @@ jobs:
 
       - name: Pull artifacts
         run: |
-          curl -L -O ${{ github.event.issue.body }}/napi-${{matrix.image.artifact}}-x64.tar.gz
+          curl -L -O ${{ github.event.issue.body }}/napi-${{matrix.image.artifact}}-${{matrix.cpu.artifact}}.tar.gz
           tar -xvzf *.tar.gz
 
-      - name: Build and Test NAPI file
+      - name: Test loading Node binaries lib
         run: |
           docker run -i -v $PWD:/src build:latest \
               node /src/load_test.js
 
+  windows-napi:
+    name: Validate NAPI windows - Node ${{matrix.nodejs}} - ${{matrix.arch.name}}
+    runs-on: windows-2022
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: true
+      matrix:
+        arch:
+          - {name: 'x64', artifact: 'x64'}
+          - {name: 'x86', artifact: 'ia32'}
+        nodejs:
+          - 18
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.nodejs }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs }}
+          architecture: ${{ matrix.arch.name }}
+
+      - name: Pull artifacts
+        run: |
+          curl -L -O ${{ github.event.issue.body }}/napi-win32-unknown-${{matrix.arch.artifact}}.tar.gz
+          tar -xvzf *.tar.gz
+
+      - name: Test loading Node binaries lib
+        run: |
+          node load_test.js
