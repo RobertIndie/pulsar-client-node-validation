@@ -96,8 +96,8 @@ jobs:
       fail-fast: true
       matrix:
         arch:
-          - {name: 'x64', artifact: 'x64'}
-          - {name: 'x86', artifact: 'ia32'}
+          - { name: "x64", artifact: "x64" }
+          - { name: "x86", artifact: "ia32" }
         nodejs:
           - 18
     steps:
@@ -111,7 +111,7 @@ jobs:
       - name: Pull artifacts
         run: |
           curl -L -O ${{ github.event.issue.body }}/napi-win32-unknown-${{matrix.arch.artifact}}.tar.gz
-          tar -xvzf *.tar.gz
+          tar -xvzf napi-win32-unknown-${{matrix.arch.artifact}}.tar.gz
 
       - name: Test loading Node binaries lib
         run: |
