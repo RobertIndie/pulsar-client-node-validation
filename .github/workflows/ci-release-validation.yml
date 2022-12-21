@@ -1,0 +1,19 @@
+name: Release validation
+on:
+  issue_comment:
+    types: [created, edited]
+
+env:
+  FORCE_COLOR: 1
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get issue body
+      run: |
+        BODY=${{ github.event.issue.body }}
+        echo "$BODY"
