@@ -9,11 +9,31 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
-  test:
-    runs-on: ubuntu-22.04
+  macos-napi:
+    name: Validate NAPI macos - Node ${{matrix.nodejs}} - ${{matrix.arch}}
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x64
+        nodejs:
+          - 18
     steps:
-    - uses: actions/checkout@v3
-    - name: Get issue body
-      run: |
-        BODY=${{ github.event.issue.body }}
-        echo "$BODY"
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.nodejs }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs }}
+          cache: 'npm'
+
+      - name: Pull artifacts
+        run: |
+          curl -L -O ${{ github.event.issue.body }}/napi-darwin-unknown-x64.tar.gz
+          tar -xvzf napi-darwin-unknown-x64.tar.gz
+
+      - name: Test loading Node binaries lib
+        run: |
+          node load_test.js
