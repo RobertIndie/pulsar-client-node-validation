@@ -9,5 +9,6 @@
   * eg. For producer: `node ./examples/producer.js`
 
 ## Release validation on GitHub Actions
+![](https://github.com/RobertIndie/pulsar-client-node-validation/actions/workflows/ci-release-validation.yml/badge.svg)
 
-* There is a workflow to run the release validation on multiple platforms. But currently, the validation on the macOS arm64 platform cannot be done in the CI.
+There is a workflow to run the release validation on multiple platforms. But currently, the validation on the macOS arm64 platform cannot be done in the CI.
