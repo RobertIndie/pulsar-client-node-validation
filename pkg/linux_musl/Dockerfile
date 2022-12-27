@@ -21,12 +21,4 @@ ARG NODE_VERSION
 
 FROM node:${NODE_VERSION}-alpine
 
-RUN apk add \
-      bash \
-      curl \
-      python3 \
-      make \
-      g++ \
-      sudo
-
 CMD ["sh"]

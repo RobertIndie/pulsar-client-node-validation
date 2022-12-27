@@ -23,11 +23,4 @@ FROM node:${NODE_VERSION}-bullseye
 
 ARG NODE_VERSION
 
-RUN apt-get update -y && \
-     apt-get install -y \
-        curl \
-        g++ \
-        make \
-        python3
-
 CMD ["sh"]
