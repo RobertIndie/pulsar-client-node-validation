@@ -82,8 +82,7 @@ jobs:
       - name: Test loading Node binaries lib
         run: |
           docker run -i -v $PWD:/src build:latest \
-              npm install ${{ github.event.issue.body }}
-              node /src/load_test.js
+              npm install -g ${{ github.event.issue.body }}; node /src/load_test.js
 
   windows-napi:
     name: Validate NAPI windows - Node ${{matrix.nodejs}} - ${{matrix.arch.name}}
