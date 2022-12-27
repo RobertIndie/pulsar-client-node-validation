@@ -10,6 +10,4 @@
 
 ## Release validation on GitHub Actions
 
-* Create an issue and paste the package name and version for the release candidate(eg. `pulsar-client@1.8.0-rc.2`) to the issue body.
-* Check `GitHub Actions`, it will automatically trigger the validation for multiple platforms. But currently, the validation on the macOS arm64 platform cannot be done in the CI.
-
+* There is a workflow to run the release validation on multiple platforms. But currently, the validation on the macOS arm64 platform cannot be done in the CI.
