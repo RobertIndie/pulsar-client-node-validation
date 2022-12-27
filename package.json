@@ -1,0 +1,25 @@
+{
+  "name": "pulsar-client-node-validation",
+  "version": "1.0.0",
+  "description": "Pulsar Client Node Validation",
+  "main": "load_test.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobertIndie/pulsar-client-node-validation.git"
+  },
+  "author": "Zike Yang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RobertIndie/pulsar-client-node-validation/issues"
+  },
+  "homepage": "https://github.com/RobertIndie/pulsar-client-node-validation#readme",
+  "dependencies": {
+    "pulsar-client": "^1.8.0-rc.2"
+  }
+}

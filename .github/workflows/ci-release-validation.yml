@@ -30,10 +30,9 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs }}
 
-      - name: Pull artifacts
+      - name: Install Pulsar Client
         run: |
-          curl -L -O ${{ github.event.issue.body }}/napi-darwin-unknown-x64.tar.gz
-          tar -xvzf napi-darwin-unknown-x64.tar.gz
+          npm install ${{ github.event.issue.body }}
 
       - name: Test loading Node binaries lib
         run: |
@@ -80,14 +79,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Pull artifacts
-        run: |
-          curl -L -O ${{ github.event.issue.body }}/napi-${{matrix.image.artifact}}-${{matrix.cpu.artifact}}.tar.gz
-          tar -xvzf *.tar.gz
-
       - name: Test loading Node binaries lib
         run: |
           docker run -i -v $PWD:/src build:latest \
+              npm install ${{ github.event.issue.body }}
               node /src/load_test.js
 
   windows-napi:
@@ -111,10 +106,9 @@ jobs:
           node-version: ${{ matrix.nodejs }}
           architecture: ${{ matrix.arch.name }}
 
-      - name: Pull artifacts
+      - name: Install Pulsar Client
         run: |
-          curl -L -O ${{ github.event.issue.body }}/napi-win32-unknown-${{matrix.arch.artifact}}.tar.gz
-          tar -xvzf napi-win32-unknown-${{matrix.arch.artifact}}.tar.gz
+          npm install ${{ github.event.issue.body }}
 
       - name: Test loading Node binaries lib
         run: |

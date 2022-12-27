@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const Pulsar = require('../binding/Pulsar.node');
+const Pulsar = require('pulsar-client');
 
 (async () => {
   // Create a client

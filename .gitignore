@@ -1,2 +1,3 @@
 *.tar.gz
 binding
+node_modules
